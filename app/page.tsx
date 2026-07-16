@@ -53,10 +53,10 @@ export default function Home() {
     <main className="min-h-screen bg-slate-100">
 
       <Header />
-      <div className="mb-10">
-  <SearchBar
-    search={search}
-    setSearch={setSearch}
+      <div className="mt-4 mb-10">
+        <SearchBar
+          search={search}
+          setSearch={setSearch}
   />
 </div>
 

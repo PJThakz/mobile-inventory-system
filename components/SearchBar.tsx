@@ -17,7 +17,7 @@ export default function SearchBar({
         onChange={(e) => setSearch(e.target.value)}
         className="
 w-full
-max-w-4xl
+max-w-7xl
 rounded-2xl
 border
 border-gray-300
