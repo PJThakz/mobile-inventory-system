@@ -1,10 +1,21 @@
+import Image from "next/image";
 export default function Header() {
   const today = new Date();
 
   return (
-    <header className="bg-white shadow-md rounded-b-3xl p-10 mb-12">
+    <header className="bg-white shadow-md rounded-b-3xl p-10">
 
-      <h1 className="text-5xl font-bold text-center text-blue-700">
+      <div className="flex justify-center mb-6">
+  <Image
+    src="/images/logo.png"
+    alt="Universal Xports Ltd."
+    width={140}
+    height={140}
+    className="object-contain"
+  />
+</div>
+
+      <h1 className="text-4xl font-bold text-center text-blue-700">
         UNIVERSAL XPORTS LTD.
       </h1>
 

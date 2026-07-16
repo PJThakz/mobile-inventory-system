@@ -1,5 +1,5 @@
 import { Product } from "@/types/products";
-
+import Image from "next/image";
 export default function ProductCard(
   {
   brand,
@@ -10,13 +10,13 @@ export default function ProductCard(
   condition,
   price,
   stock,
+  image,
 }: Product)
  {
   const whatsappMessage = encodeURIComponent(
 `Hi,
 
 I'm interested in:
-
 ${brand} ${model}
 ${storage}
 ${color}
@@ -33,9 +33,17 @@ const whatsappLink = `https://wa.me/85298022538?text=${whatsappMessage}`;
     <div className="w-72 rounded-xl bg-white shadow-md border border-gray-200 hover:shadow-xl transition">
 
       {/* Product Image Placeholder */}
-      <div className="flex items-center justify-center h-40 bg-gray-100 rounded-t-xl text-6xl">
-        📱
-      </div>
+      <div className="group w-72 rounded-xl bg-white shadow-md border border-gray-200 hover:shadow-xl transition duration-300">
+
+  <Image
+  src={image}
+  alt={model}
+  width={400}
+  height={400}
+  className="h-full w-full object-contain p-4 transition-transform duration-300 group-hover:scale-110"
+/>
+
+</div>
 
       <div className="p-5">
 

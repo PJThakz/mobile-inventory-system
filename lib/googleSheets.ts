@@ -10,6 +10,7 @@ type GoogleSheetProduct = {
   Condition: string;
   Stock: number;
   Price: number;
+  Image: string;
 };
 
 export async function getProducts() {
@@ -34,5 +35,6 @@ export async function getProducts() {
 condition: item.Condition as Product["condition"],
     stock: Number(item.Stock),
     price: Number(item.Price),
+    image: item.Image,
   }));
 }

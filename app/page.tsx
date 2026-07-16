@@ -53,7 +53,6 @@ export default function Home() {
     <main className="min-h-screen bg-slate-100">
 
       <Header />
-      <hr className="mt-6 border-gray-200" />
       <div className="mb-10">
   <SearchBar
     search={search}
