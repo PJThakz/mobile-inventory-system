@@ -15,7 +15,24 @@ export default function SearchBar({
         placeholder="🔍 Search model, storage, color..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="w-full max-w-2xl rounded-lg border border-gray-300 px-5 py-3 shadow-sm placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="
+w-full
+max-w-2xl
+rounded-2xl
+border
+border-gray-300
+bg-white
+px-6
+py-4
+text-lg
+text-gray-900
+placeholder:text-gray-600
+shadow-md
+focus:outline-none
+focus:ring-2
+focus:ring-blue-500
+transition
+"
       />
 
     </div>

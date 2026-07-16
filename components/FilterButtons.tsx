@@ -14,9 +14,9 @@ export default function FilterButtons({
   return (
     <div className="mb-8">
 
-      <h3 className="text-center text-gray-600 mb-3 font-medium">
-        {title}
-      </h3>
+      <h3 className="text-center text-lg font-bold text-gray-800 underline underline-offset-4 mb-4">
+  {title}
+</h3>
 
       <div className="flex flex-wrap justify-center gap-3">
 

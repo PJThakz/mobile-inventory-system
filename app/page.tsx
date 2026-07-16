@@ -53,32 +53,38 @@ export default function Home() {
     <main className="min-h-screen bg-slate-100">
 
       <Header />
+      <hr className="mt-6 border-gray-200" />
+      <div className="mb-10">
+  <SearchBar
+    search={search}
+    setSearch={setSearch}
+  />
+</div>
 
-      <SearchBar
-        search={search}
-        setSearch={setSearch}
-      />
+<div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-12">
 
-      <FilterButtons
-        title="Brand"
-        options={brands}
-        selected={selectedBrand}
-        setSelected={setSelectedBrand}
-      />
+  <FilterButtons
+    title="Brand"
+    options={brands}
+    selected={selectedBrand}
+    setSelected={setSelectedBrand}
+  />
 
-      <FilterButtons
-        title="Category"
-        options={categories}
-        selected={selectedCategory}
-        setSelected={setSelectedCategory}
-      />
+  <FilterButtons
+    title="Category"
+    options={categories}
+    selected={selectedCategory}
+    setSelected={setSelectedCategory}
+  />
 
-      <ProductGrid
-        products={products}
-        search={search}
-        selectedBrand={selectedBrand}
-        selectedCategory={selectedCategory}
-      />
+</div>
+
+<ProductGrid
+  products={products}
+  search={search}
+  selectedBrand={selectedBrand}
+  selectedCategory={selectedCategory}
+/>
 
     </main>
   );

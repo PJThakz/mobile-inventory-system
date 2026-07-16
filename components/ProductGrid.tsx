@@ -41,10 +41,14 @@ export default function ProductGrid({
 
   return (
     <section className="px-8 pb-10">
+      
+      <div className="text-center mb-10">
+  <h2 className="text-3xl font-bold text-gray-800">
+    Showing {filteredProducts.length} Products
+  </h2>
 
-      <p className="text-gray-600 mb-6 text-center">
-        Showing <span className="font-semibold">{filteredProducts.length}</span> Products
-      </p>
+  <div className="mt-1 h-1 w-64 rounded-full bg-linear-to-r from-blue-500 to-indigo-600 mx-auto"></div>
+</div>
 
       <div className="flex flex-wrap justify-center gap-6">
 

@@ -1,6 +1,7 @@
 import { Product } from "@/types/products";
 
-export default function ProductCard({
+export default function ProductCard(
+  {
   brand,
   model,
   color,
@@ -9,7 +10,25 @@ export default function ProductCard({
   condition,
   price,
   stock,
-}: Product) {
+}: Product)
+ {
+  const whatsappMessage = encodeURIComponent(
+`Hi,
+
+I'm interested in:
+
+${brand} ${model}
+${storage}
+${color}
+${spec} Spec
+${condition}
+
+Listed Price: HK$${price.toLocaleString()}
+
+Is this still available?`
+);
+
+const whatsappLink = `https://wa.me/85298022538?text=${whatsappMessage}`;
   return (
     <div className="w-72 rounded-xl bg-white shadow-md border border-gray-200 hover:shadow-xl transition">
 
@@ -70,9 +89,23 @@ export default function ProductCard({
 
         </div>
 
-        <button className="w-full rounded-lg bg-green-600 py-3 text-white font-medium hover:bg-green-700 transition">
-          WhatsApp Inquiry
-        </button>
+        {stock > 0 ? (
+  <a
+    href={whatsappLink}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="block w-full rounded-xl bg-green-600 py-3 text-center font-semibold text-white transition hover:bg-green-700"
+  >
+    💬 WhatsApp Inquiry
+  </a>
+) : (
+  <button
+    disabled
+    className="w-full rounded-xl bg-gray-300 py-3 text-center font-semibold text-gray-500 cursor-not-allowed"
+  >
+    Out of Stock
+  </button>
+)}
 
       </div>
 
