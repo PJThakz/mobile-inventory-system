@@ -6,6 +6,7 @@ type ProductGridProps = {
   search: string;
   selectedBrand: string;
   selectedCategory: string;
+  selectedVariant: string;
 };
 
 export default function ProductGrid({
@@ -13,6 +14,7 @@ export default function ProductGrid({
   search,
   selectedBrand,
   selectedCategory,
+  selectedVariant,
 }: ProductGridProps) {
   const filteredProducts = products.filter((product) => {
   const term = search.toLowerCase();
@@ -31,26 +33,40 @@ export default function ProductGrid({
   const matchesCategory =
     selectedCategory === "All" ||
     product.category === selectedCategory;
+  
+  const matchesVariant =
+  selectedVariant === "All" ||
+  product.storage === selectedVariant;
 
   return (
-    matchesSearch &&
-    matchesBrand &&
-    matchesCategory
-  );
+  matchesSearch &&
+  matchesBrand &&
+  matchesCategory &&
+  matchesVariant
+);
 });
 
   return (
     <section className="px-8 pb-10">
       
-      <div className="text-center mb-10">
-  <h2 className="text-3xl font-bold text-gray-800">
-    Showing {filteredProducts.length} Products
-  </h2>
+      <div className="mb-8">
+  <div className="inline-block">
+    <h2 className="text-3xl font-bold text-gray-800">
+      Showing {filteredProducts.length} Products
+    </h2>
 
-  <div className="mt-1 h-1 w-64 rounded-full bg-linear-to-r from-blue-500 to-indigo-600 mx-auto"></div>
+    <div className="mt-2 h-1 w-full rounded-full bg-gradient-to-r from-blue-500 to-indigo-600"></div>
+  </div>
 </div>
 
-      <div className="flex flex-wrap justify-center gap-6">
+      <div className="
+grid
+grid-cols-1
+sm:grid-cols-2
+xl:grid-cols-3
+2xl:grid-cols-4
+gap-8
+">
 
         {filteredProducts.map((product) => (
           <ProductCard

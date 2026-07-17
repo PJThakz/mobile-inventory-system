@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 import Header from "@/components/Header";
 import SearchBar from "@/components/SearchBar";
-import FilterButtons from "@/components/FilterButtons";
+import Sidebar from "@/components/Sidebar";
 import ProductGrid from "@/components/ProductGrid";
 
 import { getProducts } from "@/lib/googleSheets";
@@ -15,6 +15,7 @@ export default function Home() {
   const [search, setSearch] = useState("");
   const [selectedBrand, setSelectedBrand] = useState("All");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedVariant, setSelectedVariant] = useState("All");
 
   useEffect(() => {
     async function loadProducts() {
@@ -49,42 +50,70 @@ export default function Home() {
     ...new Set(products.map((product) => product.category)),
   ];
 
+  const variants = [
+  "All",
+  ...new Set(
+    products
+      .map((product) => product.storage)
+      .filter(
+        (value) =>
+          value &&
+          value !== "-" &&
+          value.trim() !== ""
+      )
+  ),
+];
+
   return (
-    <main className="min-h-screen bg-slate-100">
+  <main className="min-h-screen bg-slate-100">
 
-      <Header />
-      <div className="mt-4 mb-10">
-        <SearchBar
-          search={search}
-          setSearch={setSearch}
-  />
-</div>
+    <Header />
 
-<div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-12">
+    <div className="mx-auto max-w-[1700px] px-6 py-6">
 
-  <FilterButtons
-    title="Brand"
-    options={brands}
-    selected={selectedBrand}
-    setSelected={setSelectedBrand}
-  />
+      <SearchBar
+        search={search}
+        setSearch={setSearch}
+      />
 
-  <FilterButtons
-    title="Category"
-    options={categories}
-    selected={selectedCategory}
-    setSelected={setSelectedCategory}
-  />
+      <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-12">
 
-</div>
+        {/* Sidebar */}
 
-<ProductGrid
-  products={products}
-  search={search}
-  selectedBrand={selectedBrand}
-  selectedCategory={selectedCategory}
-/>
+        <aside className="lg:col-span-2">
+  <div className="sticky top-6">
+    <Sidebar
+      brands={brands}
+      categories={categories}
+      selectedBrand={selectedBrand}
+      setSelectedBrand={setSelectedBrand}
+      selectedCategory={selectedCategory}
+      setSelectedCategory={setSelectedCategory}
+      variants={variants}
+      selectedVariant={selectedVariant}
+      setSelectedVariant={setSelectedVariant}
+    />
+  </div>
+</aside>
 
-    </main>
-  );
+        {/* Product Grid */}
+
+        <section className="lg:col-span-10">
+
+          <ProductGrid
+            products={products}
+            search={search}
+            selectedBrand={selectedBrand}
+            selectedCategory={selectedCategory}
+            selectedVariant={selectedVariant}
+          />
+
+        </section>
+
+      </div>
+
+    </div>
+
+  </main>
+);
 }
