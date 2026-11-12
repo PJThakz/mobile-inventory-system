@@ -14,14 +14,12 @@ export default function FilterSection({
   setSelected,
 }: FilterSectionProps) {
   return (
-    <div className="mb-8">
-
-      <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-slate-500">
+    <div className="mb-6" role="group" aria-label={title}>
+      <h3 className="mb-3 font-display text-base font-bold text-[#0a1a38]">
         {title}
       </h3>
 
       <div className="flex flex-wrap gap-2">
-
         {options.map((option) => (
           <FilterOption
             key={option}
@@ -30,9 +28,7 @@ export default function FilterSection({
             onClick={() => setSelected(option)}
           />
         ))}
-
       </div>
-
     </div>
   );
 }

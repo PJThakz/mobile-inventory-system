@@ -1,110 +1,106 @@
+import { MessageCircle } from "lucide-react";
+
+import ProductImage from "./ProductImage";
+import StockBadge from "./StockBadge";
+
 import { Product } from "@/types/products";
-import Image from "next/image";
+import { whatsappLink } from "@/lib/config";
+import { buildEnquiryMessage, isReal } from "@/lib/productUtils";
 
-export default function ProductCard({
-  brand,
-  model,
-  color,
-  storage,
-  spec,
-  condition,
-  price,
-  stock,
-  image,
-}: Product) {
-  const whatsappMessage = encodeURIComponent(
-`Hi,
+export default function ProductCard(product: Product) {
+  const {
+    brand,
+    model,
+    color,
+    storage,
+    spec,
+    condition,
+    price,
+    availability,
+    stockCount,
+    image,
+  } = product;
 
-I'm interested in:
-
-${brand} ${model}
-${storage}
-${color}
-${spec} Spec
-${condition}
-
-Listed Price: HK$${price.toLocaleString()}
-
-Is this still available?`
-  );
-
-  const whatsappLink = `https://wa.me/85298022538?text=${whatsappMessage}`;
+  const inStock = availability !== "out";
+  const variant = [storage, color].filter(isReal).join(", ");
 
   return (
-    <div className="group flex w-full flex-col rounded-xl border border-gray-200 bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
-
-      {/* Product Image */}
-      <div className="relative h-56 w-full bg-white rounded-t-xl overflow-hidden">
-        <Image
+    <article className="group flex flex-col overflow-hidden rounded-xl bg-white ring-1 ring-[#cdd9ec] transition hover:shadow-md hover:ring-[#0b4ea2]">
+      {/* Photo, with the details that matter most in this trade pinned on it */}
+      <div className="relative aspect-[4/3] bg-[#f0f5fc]">
+        <ProductImage
           src={image}
-          alt={model}
-          fill
-          className="object-contain p-3 transition-transform duration-300 group-hover:scale-110"
+          alt={`${brand} ${model}`}
+          sizes="(min-width: 1280px) 22vw, (min-width: 768px) 30vw, 50vw"
+          dimmed={!inStock}
         />
+
+        <div className="absolute left-2 top-2 flex flex-wrap gap-1">
+          {isReal(spec) && (
+            <span className="rounded-md bg-[#0a1a38] px-2 py-0.5 text-xs font-bold text-white">
+              {spec}
+            </span>
+          )}
+          {isReal(condition) && (
+            <span className="rounded-md bg-white px-2 py-0.5 text-xs font-semibold text-slate-800 ring-1 ring-[#cdd9ec]">
+              {condition}
+            </span>
+          )}
+        </div>
       </div>
 
-      {/* Product Details */}
-      <div className="flex flex-col flex-1 p-5">
+      <div className="flex flex-1 flex-col p-3 sm:p-4">
+        <p className="text-sm text-slate-600">{brand}</p>
 
-        <h2 className="text-xl font-bold text-gray-900">
+        <h3 className="mt-0.5 line-clamp-2 font-display text-base font-bold leading-snug text-[#0a1a38] sm:text-lg">
           {model}
-        </h2>
+        </h3>
 
-        <p className="text-gray-600 mb-2">
-          {brand}
-        </p>
+        {variant && <p className="mt-1 text-sm text-slate-700">{variant}</p>}
 
-        <p className="text-gray-700">
-          {color}
-        </p>
-
-        <p className="text-sm text-gray-500 mb-4">
-          {storage} • {spec} • {condition}
-        </p>
-
-        <div className="mb-5">
-
-  <p className="text-3xl font-bold text-blue-600">
-    HK${price.toLocaleString()}
-  </p>
-
-  {stock > 0 ? (
-    <p className="mt-2 text-sm font-semibold text-green-600">
-      🟢 {stock} Units Available
-    </p>
-  ) : (
-    <p className="mt-2 text-sm font-semibold text-red-600">
-      🔴 Out of Stock
-    </p>
-  )}
-
-</div>
-
-        {/* Push button to bottom */}
-        <div className="mt-auto">
-
-          {stock > 0 ? (
-            <a
-              href={whatsappLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block w-full rounded-xl bg-green-600 py-2.5 text-center font-semibold text-white transition hover:bg-green-700"
-            >
-              💬 WhatsApp Inquiry
-            </a>
+        <div className="mt-3">
+          {price > 0 ? (
+            <p className="font-display text-2xl font-extrabold tracking-tight text-[#0b4ea2] sm:text-3xl">
+              <span className="mr-1 text-sm font-bold text-slate-600 sm:text-base">
+                HK$
+              </span>
+              {price.toLocaleString("en-HK")}
+            </p>
           ) : (
-            <button
-              disabled
-              className="w-full rounded-xl bg-gray-300 py-2.5 text-center font-semibold text-gray-500 cursor-not-allowed"
-            >
-              Out of Stock
-            </button>
+            <p className="font-display text-lg font-bold text-slate-600 sm:text-xl">
+              Price on request
+            </p>
           )}
 
+          <div className="mt-1.5">
+            <StockBadge availability={availability} stockCount={stockCount} />
+          </div>
         </div>
 
+        <div className="mt-auto pt-4">
+          {inStock ? (
+            <a
+              href={whatsappLink(buildEnquiryMessage(product))}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-green-700 px-3 text-sm font-semibold text-white transition hover:bg-green-800"
+            >
+              <MessageCircle className="size-4 shrink-0" aria-hidden="true" />
+              <span className="sm:hidden">WhatsApp</span>
+              <span className="hidden sm:inline">Ask on WhatsApp</span>
+            </a>
+          ) : (
+            <a
+              href={whatsappLink(buildEnquiryMessage(product, "restock"))}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg px-3 text-sm font-semibold text-slate-800 ring-1 ring-slate-300 transition hover:bg-[#f0f5fc]"
+            >
+              Ask about restock
+            </a>
+          )}
+        </div>
       </div>
-
-    </div>
+    </article>
   );
 }

@@ -1,7 +1,11 @@
+export type Availability = "in" | "low" | "out";
+
 export type Product = {
   id: number;
 
-  category: "Phone" | "Tablet" | "Laptop";
+  // Plain strings so new categories (Watch, Airpods, ...) just work
+  // when they are added to the sheet.
+  category: string;
 
   brand: string;
 
@@ -11,13 +15,17 @@ export type Product = {
 
   storage: string;
 
-  spec: "HK" | "JP" | "US";
+  spec: string;
 
-  condition: "Sealed" | "Unsealed";
+  condition: string;
 
+  // 0 means "no price entered" and is shown as "Price on request".
   price: number;
 
-  stock: number;
+  availability: Availability;
+
+  // Only present when SHOW_STOCK_COUNT is true in lib/config.ts.
+  stockCount?: number;
 
   image: string;
 };

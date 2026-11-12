@@ -1,119 +1,37 @@
-"use client";
-
-import { useEffect, useState } from "react";
-
 import Header from "@/components/Header";
-import SearchBar from "@/components/SearchBar";
-import Sidebar from "@/components/Sidebar";
-import ProductGrid from "@/components/ProductGrid";
+import Footer from "@/components/Footer";
+import Catalog from "@/components/Catalog";
+import ErrorState from "@/components/ErrorState";
+import FloatingWhatsApp from "@/components/FloatingWhatsApp";
 
-import { getProducts } from "@/lib/googleSheets";
-import { Product } from "@/types/products";
+import { CatalogData, getData } from "@/lib/googleSheets";
 
-export default function Home() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [search, setSearch] = useState("");
-  const [selectedBrand, setSelectedBrand] = useState("All");
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [selectedVariant, setSelectedVariant] = useState("All");
+// Rebuild this page at most once a minute with fresh sheet data.
+export const revalidate = 60;
 
-  useEffect(() => {
-    async function loadProducts() {
-      try {
-        const data = await getProducts();
-        setProducts(data);
-      } catch (error) {
-        console.error("Failed to load products:", error);
-      }
-    }
+export default async function Home() {
+  let data: CatalogData | null = null;
 
-    loadProducts();
-  }, []);
-
-  if (products.length === 0) {
-    return (
-      <main className="min-h-screen flex items-center justify-center">
-        <p className="text-xl text-gray-500">
-          Loading inventory...
-        </p>
-      </main>
-    );
+  try {
+    data = await getData();
+  } catch (error) {
+    console.error("Failed to load inventory:", error);
   }
 
-  const brands = [
-    "All",
-    ...new Set(products.map((product) => product.brand)),
-  ];
-
-  const categories = [
-    "All",
-    ...new Set(products.map((product) => product.category)),
-  ];
-
-  const variants = [
-  "All",
-  ...new Set(
-    products
-      .map((product) => product.storage)
-      .filter(
-        (value) =>
-          value &&
-          value !== "-" &&
-          value.trim() !== ""
-      )
-  ),
-];
-
   return (
-  <main className="min-h-screen bg-slate-100">
+    <div className="min-h-screen bg-[#e8eef7] text-[#0a1a38]">
+      <Header lastUpdated={data?.lastUpdated ?? null} />
 
-    <Header />
+      <main>
+        {data ? (
+          <Catalog products={data.products} updates={data.updates} />
+        ) : (
+          <ErrorState />
+        )}
+      </main>
 
-    <div className="mx-auto max-w-[1700px] px-6 py-6">
-
-      <SearchBar
-        search={search}
-        setSearch={setSearch}
-      />
-
-      <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-12">
-
-        {/* Sidebar */}
-
-        <aside className="lg:col-span-2">
-  <div className="sticky top-6">
-    <Sidebar
-      brands={brands}
-      categories={categories}
-      selectedBrand={selectedBrand}
-      setSelectedBrand={setSelectedBrand}
-      selectedCategory={selectedCategory}
-      setSelectedCategory={setSelectedCategory}
-      variants={variants}
-      selectedVariant={selectedVariant}
-      setSelectedVariant={setSelectedVariant}
-    />
-  </div>
-</aside>
-
-        {/* Product Grid */}
-
-        <section className="lg:col-span-10">
-
-          <ProductGrid
-            products={products}
-            search={search}
-            selectedBrand={selectedBrand}
-            selectedCategory={selectedCategory}
-            selectedVariant={selectedVariant}
-          />
-
-        </section>
-
-      </div>
-
+      <Footer />
+      <FloatingWhatsApp />
     </div>
-
-  </main>
-);
+  );
 }

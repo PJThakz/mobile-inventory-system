@@ -1,82 +1,85 @@
+import { MessageCircle, PackageSearch } from "lucide-react";
+
 import ProductCard from "./ProductCard";
+import ProductRow from "./ProductRow";
+import { ViewMode } from "./Toolbar";
+
 import { Product } from "@/types/products";
+import { whatsappLink } from "@/lib/config";
 
 type ProductGridProps = {
+  // Already filtered and sorted by Catalog.
   products: Product[];
+  view: ViewMode;
   search: string;
-  selectedBrand: string;
-  selectedCategory: string;
-  selectedVariant: string;
+  onClearAll: () => void;
 };
 
 export default function ProductGrid({
   products,
+  view,
   search,
-  selectedBrand,
-  selectedCategory,
-  selectedVariant,
+  onClearAll,
 }: ProductGridProps) {
-  const filteredProducts = products.filter((product) => {
-  const term = search.toLowerCase();
+  if (products.length === 0) {
+    const askLink = whatsappLink(
+      `Hi, do you have ${search.trim() || "this"} in stock?`
+    );
 
-  const matchesSearch =
-    product.brand.toLowerCase().includes(term) ||
-    product.model.toLowerCase().includes(term) ||
-    product.color.toLowerCase().includes(term) ||
-    product.storage.toLowerCase().includes(term) ||
-    product.spec.toLowerCase().includes(term);
+    return (
+      <div className="rounded-xl bg-white p-8 text-center ring-1 ring-[#cdd9ec] sm:p-12">
+        <PackageSearch
+          className="mx-auto mb-4 size-12 text-slate-400"
+          aria-hidden="true"
+        />
 
-  const matchesBrand =
-    selectedBrand === "All" ||
-    product.brand === selectedBrand;
+        <h3 className="font-display text-2xl font-bold text-[#0a1a38]">
+          Nothing matches that
+        </h3>
 
-  const matchesCategory =
-    selectedCategory === "All" ||
-    product.category === selectedCategory;
-  
-  const matchesVariant =
-  selectedVariant === "All" ||
-  product.storage === selectedVariant;
+        <p className="mx-auto mt-2 max-w-sm text-slate-600">
+          Check the spelling, or clear the filters to see everything. Can&apos;t
+          find it? Ask us on WhatsApp.
+        </p>
 
-  return (
-  matchesSearch &&
-  matchesBrand &&
-  matchesCategory &&
-  matchesVariant
-);
-});
+        <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
+          <button
+            type="button"
+            onClick={onClearAll}
+            className="min-h-11 rounded-lg bg-[#0a1a38] px-6 font-semibold text-white transition hover:bg-slate-800"
+          >
+            Clear filters
+          </button>
 
-  return (
-    <section className="px-8 pb-10">
-      
-      <div className="mb-8">
-  <div className="inline-block">
-    <h2 className="text-3xl font-bold text-gray-800">
-      Showing {filteredProducts.length} Products
-    </h2>
-
-    <div className="mt-2 h-1 w-full rounded-full bg-gradient-to-r from-blue-500 to-indigo-600"></div>
-  </div>
-</div>
-
-      <div className="
-grid
-grid-cols-1
-sm:grid-cols-2
-xl:grid-cols-3
-2xl:grid-cols-4
-gap-8
-">
-
-        {filteredProducts.map((product) => (
-          <ProductCard
-            key={`${product.brand}-${product.model}-${product.storage}-${product.color}`}
-            {...product}
-          />
-        ))}
-
+          <a
+            href={askLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-green-700 px-6 font-semibold text-white transition hover:bg-green-800"
+          >
+            <MessageCircle className="size-5" aria-hidden="true" />
+            Ask on WhatsApp
+          </a>
+        </div>
       </div>
+    );
+  }
 
-    </section>
+  if (view === "list") {
+    return (
+      <ul className="space-y-2.5">
+        {products.map((product) => (
+          <ProductRow key={product.id} {...product} />
+        ))}
+      </ul>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 xl:grid-cols-4">
+      {products.map((product) => (
+        <ProductCard key={product.id} {...product} />
+      ))}
+    </div>
   );
 }

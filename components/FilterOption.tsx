@@ -11,12 +11,13 @@ export default function FilterOption({
 }: FilterOptionProps) {
   return (
     <button
+      type="button"
       onClick={onClick}
-      className={`rounded-full px-4 py-2 text-sm font-medium transition-all duration-200
-      ${
+      aria-pressed={selected}
+      className={`min-h-11 rounded-lg px-4 text-sm font-medium transition ${
         selected
-          ? "bg-blue-600 text-white shadow-md"
-          : "border border-slate-300 bg-white text-slate-700 hover:border-blue-400 hover:bg-blue-50"
+          ? "bg-[#0b4ea2] text-white"
+          : "bg-white text-slate-800 ring-1 ring-slate-300 hover:ring-slate-500"
       }`}
     >
       {label}
